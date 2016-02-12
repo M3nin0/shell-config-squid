@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 echo "Squid Config"
-echo "Scripted by Phelps"
+echo "Scripted by M3nin0"
 sleep 5
 config_SQUID(){
 clear

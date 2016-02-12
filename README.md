@@ -1,4 +1,4 @@
-# shell-script
+# shell-config-squid
 Hello! Sorry for my English, I do not speak well this language
 I made this script to facilitate the work of all those who need to make the configuration of squid service.
 

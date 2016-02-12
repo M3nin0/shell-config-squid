@@ -123,8 +123,8 @@ touch /etc/squid3/squid_passwd
 echo "Concluido"
 sleep 2
 clear
-echo "Definindo usuario SQUID:"
-echo "Insira o nome do usuario: "
+echo "Make a squid user:"
+echo "Insert the username: "
 read usuario
 htpasswd /etc/squid3/squid_passwd $usuario
 echo "Success!!!"

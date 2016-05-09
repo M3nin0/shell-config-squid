@@ -30,14 +30,14 @@ case $menu in
 echo "Make Copies for your security"
 mv /etc/squid3/squid.conf /etc/squid3/squid.old
 # Define em qual porta o Squid vai atuar, a porta default é a 3128, mas podemos definir qualquer outra porta.
-http_port 3128 >> /etc/squid3/squid.conf 
+echo "http_port 3128" >> /etc/squid3/squid.conf 
 # Define o nome do servidor
-visible_hostname SegInfo >> /etc/squid3/squid.conf
+echo "visible_hostname SegInfo" >> /etc/squid3/squid.conf
 echo "" >> /etc/squid3/squid.conf
 #Esta linha cria uma ACL, uma política de acesso com nome "all" contendo qualquer IP.
-acl all src 0.0.0.0/0.0.0.0 >> /etc/squid3/squid.conf
+echo "acl all src 0.0.0.0/0.0.0.0" >> /etc/squid3/squid.conf
 # Aqui criamos uma ACL para localhost
-acl redelocal src 127.0.0.1/255.255.255.255
+echo "acl redelocal src 127.0.0.1/255.255.255.255" >> /etc/squid3/squid.conf
 #Definido ACL de portas HTTPS
 echo "acl SSL_ports port 443 563" >> /etc/squid3/squid.conf
 #Definindo ACL de portas utilizadas na interent
@@ -54,39 +54,39 @@ echo "acl Safe_ports port 901 #swat" >> /etc/squid3/squid.conf
 echo "acl Safe_ports port 1025-65535 #HIGH PORTS" >> /etc/squid3/squid.conf
 
 #Cria a ACL manager do tipo proto.
-acl manager proto cache_object >> /etc/squid3/squid.conf
+echo "acl manager proto cache_object" >> /etc/squid3/squid.conf
 # Cria a ACL manager do tipo method.
-acl purge method PURGE >> /etc/squid3/squid.conf
+echo "acl purge method PURGE" >> /etc/squid3/squid.conf
 # Cria a ACL CONNECT também do tipo method.
-acl CONNECT method CONNECT >> /etc/squid3/squid.conf
+echo "acl CONNECT method CONNECT" >> /etc/squid3/squid.conf
 #Libera a ACL manager e localhost.
-http_access allow manager localhost >> /etc/squid3/squid.conf
+echo "http_access allow manager localhost" >> /etc/squid3/squid.conf
 #Bloqueia a ACL manager.
-http_access deny manager >> /etc/squid3/squid.conf
+echo "http_access deny manager" >> /etc/squid3/squid.conf
 # Libera a ACL purge e localhost
-http_access allow purge localhost >> /etc/squid3/squid.conf
+echo "http_access allow purge localhost" >> /etc/squid3/squid.conf
 # Bloqueia a ACL purge.
-http_access deny purge >> /etc/squid3/squid.conf
+echo "http_access deny purge" >> /etc/squid3/squid.conf
 # Esta linha se torna bastante interessante pelo uso da "!", 
 #pois ela bloqueia qualquer conexão que não contenha o conteúdo da ACL Safe_Ports.
-http_access deny !Safe_ports >> /etc/squid3/squid.conf
+echo "http_access deny !Safe_ports" >> /etc/squid3/squid.conf
 #Bloquia todas as conexões que estão fora das regras de bloqueio
  # Bloqueia qualquer conexão que não esteja no conteúdo da ACL SSL_ports.
-http_access deny CONNECT !SSL_ports >> /etc/squid3/squid.conf
+echo "http_access deny CONNECT !SSL_ports" >> /etc/squid3/squid.conf
  # Cria a ACL redelocal contendo a faixa de endereço da rede.
-acl redelocal src 192.168.0.0/24 >> /etc/squid3/squid.conf
+echo "acl redelocal src 192.168.0.0/24" >> /etc/squid3/squid.conf
  #Libera a ACL localhost.
-http_access allow localhost >> /etc/squid3/squid.conf
+echo "http_access allow localhost" >> /etc/squid3/squid.conf
 #Libera a ACL redelocal.
-http_access allow redelocal >> /etc/squid3/squid.conf
+echo "http_access allow redelocal" >> /etc/squid3/squid.conf
 #Bloqueia a ACL all
-http_access deny all >> /etc/squid3/squid.conf
+echo "http_access deny all" >> /etc/squid3/squid.conf
 # Memoria utilizada pelo squid
-cache_mem 256 MB >> /etc/squid3/squid.conf
+echo "cache_mem 256 MB" >> /etc/squid3/squid.conf
 #Limitando arquivos 
-maximum_object_size_in_memory 256 KB >> /etc/squid3/squid.conf
+echo "maximum_object_size_in_memory 256 KB" >> /etc/squid3/squid.conf
 #Local onde fica salvo os Logs do Squid 
-cache_access_log /var/log/squid/access.log >> /etc/squid3/squid.conf
+echo "cache_access_log /var/log/squid/access.log" >> /etc/squid3/squid.conf
 #Iniciando bloqueio de sites
 echo "#### Blocked ####" >> /etc/squid3/squid.conf
 #Criando arquivos de bloqueio
@@ -115,8 +115,8 @@ cd /etc/sarg
 cp sarg.conf sarg.conf.backup 
 
 #Configurando Log do Sarg
-access_log /var/log/squid/access.log >> sarg.conf
-output_dir /var/www/html/ >> sarg.conf
+echo "access_log /var/log/squid/access.log" >> sarg.conf
+echo "output_dir /var/www/html/" >> sarg.conf
 ;;
 
 2)
@@ -135,7 +135,7 @@ echo "Config Firewall"
 #Gerando arquivo de inicialização
 touch /etc/init.d/firewall.sh
 #Permitindo execução do programa
-chmod +x /etc/init.d/firewall 
+chmod +x /etc/init.d/firewall.sh
 #Gerando link na pasta rc2.d para script inicializar junto com o sistema
 ln -s /etc/init.d/firewall.sh /etc/rc2.d/S99firewall 
 #Liberando acesso a algumas portas
@@ -145,28 +145,28 @@ iptables -F
 iptables -F >> /etc/init.d/firewall.sh
 #SSH port - 22
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT >> /etc/init.d/firewall.sh
+echo "iptables -A INPUT -p tcp --dport 22 -j ACCEPT >> /etc/init.d/firewall.sh
 #HTTP port - 80
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT >> /etc/init.d/firewall.sh 
+echo "iptables -A INPUT -p tcp --dport 80 -j ACCEPT" >> /etc/init.d/firewall.sh 
 #HTTPS port - 443
 iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-iptables -A INPUT -p tcp --dport 443 -j ACCEPT >> /etc/init.d/firewall.sh
+echo "iptables -A INPUT -p tcp --dport 443 -j ACCEPT" >> /etc/init.d/firewall.sh
 #Squid port - 3128
 iptables -A INPUT -p tcp --dport 3128 -j ACCEPT
-iptables -A INPUT -p tcp --dport 3128 -j ACCEPT >> /etc/init.d/firewall.sh
+echo "iptables -A INPUT -p tcp --dport 3128 -j ACCEPT" >> /etc/init.d/firewall.sh
 #Skype port 81
 iptables -A INPUT -p tcp --dport 81 -j ACCEPT
-iptables -A INPUT -p tcp --dport 81 -j ACCEPT >> /etc/init.d/firewall.sh
+echo "iptables -A INPUT -p tcp --dport 81 -j ACCEPT" >> /etc/init.d/firewall.sh
 #VNC port 5900
 iptables -A INPUT -p tcp --dport 5900 -j ACCEPT
-iptables -A INPUT -p tcp --dport 5900 -j ACCEPT >> /etc/init.d/firewall.sh
+echo "iptables -A INPUT -p tcp --dport 5900 -j ACCEPT" >> /etc/init.d/firewall.sh
 #Bloqueando as demais portas
 iptables -A INPUT -p tcp --syn -j DROP
-iptables -A INPUT -p tcp --syn -j DROP >> /etc/init.d/firewall.sh
+echo "iptables -A INPUT -p tcp --syn -j DROP" >> /etc/init.d/firewall.sh
 #Bloqueio de portas UDP de 0 - 65535
 iptables -A INPUT -p udp --dport 0:65535 -j DROP
-iptables -A INPUT -p udp --dport 0:65535 -j DROP >> /etc/init.d/firewall.sh
+echo "iptables -A INPUT -p udp --dport 0:65535 -j DROP" >> /etc/init.d/firewall.sh
 ;;
 
 *)

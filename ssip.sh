@@ -116,7 +116,7 @@ cp sarg.conf sarg.conf.backup
 
 #Configurando Log do Sarg
 access_log /var/log/squid/access.log >> sarg.conf
-output_dir /var/www/html/
+output_dir /var/www/html/ >> sarg.conf
 ;;
 
 2)

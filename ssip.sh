@@ -137,7 +137,7 @@ touch /etc/init.d/firewall.sh
 #Permitindo execução do programa
 chmod +x /etc/init.d/firewall 
 #Gerando link na pasta rc2.d para script inicializar junto com o sistema
-ln -s /etc/init.d/firewall /etc/rc2.d/S99firewall 
+ln -s /etc/init.d/firewall.sh /etc/rc2.d/S99firewall 
 #Liberando acesso a algumas portas
 echo "#!/bin/bash" >> /etc/init.d/firewall.sh
 #Zerando configurações anteriores

@@ -142,10 +142,10 @@ ln -s /etc/init.d/firewall.sh /etc/rc2.d/S99firewall
 echo "#!/bin/bash" >> /etc/init.d/firewall.sh
 #Zerando configurações anteriores
 iptables -F 
-iptables -F >> /etc/init.d/firewall.sh
+echo "iptables -F" >> /etc/init.d/firewall.sh
 #SSH port - 22
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-echo "iptables -A INPUT -p tcp --dport 22 -j ACCEPT >> /etc/init.d/firewall.sh
+echo "iptables -A INPUT -p tcp --dport 22 -j ACCEPT" >> /etc/init.d/firewall.sh
 #HTTP port - 80
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 echo "iptables -A INPUT -p tcp --dport 80 -j ACCEPT" >> /etc/init.d/firewall.sh 

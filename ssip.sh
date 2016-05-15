@@ -37,10 +37,33 @@ echo "" >> /etc/squid3/squid.conf
 #Esta linha cria uma ACL, uma política de acesso com nome "all" contendo qualquer IP.
 echo "acl all src 0.0.0.0/0.0.0.0" >> /etc/squid3/squid.conf
 # Aqui criamos uma ACL para localhost
-echo "acl redelocal src 127.0.0.1/255.255.255.255" >> /etc/squid3/squid.conf
+
+##########################################
+#Definindo espaços utilizados            #
+##########################################
+
+# Memoria utilizada pelo squid
+echo "cache_mem 128 MB" >> /etc/squid3/squid.conf
+# Limitando arquivos 
+echo "maximum_object_size_in_memory 64 KB" >> /etc/squid3/squid.conf
+
+echo "maximum_object_size 512 MB" >> /etc/squid3/squid.conf
+
+echo "minimum_object_size 0 KB" >> /etc/squid3/squid.conf
+
+echo "cache_swap_low 90" >> /etc/squid3/squid.conf
+
+echo "cache_swap_high 95" >> /etc/squid3/squid.conf
+
+echo "cache_dir ufs /var/spool/squid3 2048 16 256" >> /etc/squid3/squid.conf
+#Local onde fica salvo os Logs do Squid 
+echo "cache_access_log /var/log/squid/access.log" >> /etc/squid3/squid.conf
+
+#Iniciando politicas de acesso
+echo "acl localhost src 127.0.0.1/255.255.255.255" >> /etc/squid3/squid.conf
 #Definido ACL de portas HTTPS
 echo "acl SSL_ports port 443 563" >> /etc/squid3/squid.conf
-#Definindo ACL de portas utilizadas na interent
+#Definindo ACL de portas utilizadas na internet
 echo "acl Safe_ports port 80 #HTTP" >> /etc/squid3/squid.conf
 echo "acl Safe_ports port 21 #FTP" >> /etc/squid3/squid.conf
 echo "acl Safe_ports port 443 563 #HTTPS, SNEWS" >> /etc/squid3/squid.conf
@@ -81,12 +104,6 @@ echo "http_access allow localhost" >> /etc/squid3/squid.conf
 echo "http_access allow redelocal" >> /etc/squid3/squid.conf
 #Bloqueia a ACL all
 echo "http_access deny all" >> /etc/squid3/squid.conf
-# Memoria utilizada pelo squid
-echo "cache_mem 256 MB" >> /etc/squid3/squid.conf
-#Limitando arquivos 
-echo "maximum_object_size_in_memory 256 KB" >> /etc/squid3/squid.conf
-#Local onde fica salvo os Logs do Squid 
-echo "cache_access_log /var/log/squid/access.log" >> /etc/squid3/squid.conf
 #Iniciando bloqueio de sites
 echo "#### Blocked ####" >> /etc/squid3/squid.conf
 #Criando arquivos de bloqueio
@@ -115,7 +132,7 @@ cd /etc/sarg
 cp sarg.conf sarg.conf.backup 
 
 #Configurando Log do Sarg
-echo "access_log /var/log/squid/access.log" >> sarg.conf
+echo "access_log /var/log/squid3/access.log" >> sarg.conf
 echo "output_dir /var/www/html/" >> sarg.conf
 ;;
 

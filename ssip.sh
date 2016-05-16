@@ -30,6 +30,8 @@ case $menu in
 
 1)
 
+mv /etc/squid3/squid.conf /etc/squid3/squid.BAK
+
 echo "Squid Config"
 
 #Porta padrão

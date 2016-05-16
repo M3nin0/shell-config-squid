@@ -35,7 +35,7 @@ mv /etc/squid3/squid.conf /etc/squid3/squid.BAK
 echo "Squid Config"
 
 #Porta padrão
-echo "http_port 3128" >> /etc/squid3/squid.conf
+echo "http_port 3128 transparent" >> /etc/squid3/squid.conf
 
 #Nome do Servidor#
 echo "visible_hostname SquidTest" >> /etc/squid3/squid.conf

@@ -20,8 +20,8 @@ fi
 
 clear
 echo "O que você quer fazer?"
-echo "1 - Install/Config SQUID"
-echo "2 - Install/Config Sarg"
+echo "1 - Instalar/Config SQUID"
+echo "2 - Instalar/Config Sarg"
 echo "3 - Compartilhar internet - NAT"
 echo "4 - Configure Firewall"
 read menu
@@ -57,14 +57,14 @@ echo "access_log /var/log/squid3/acces.log squid" >> /etc/squid3/squid.conf
 echo "acl sites_proibidos url_regex -i "etc/squid3/regras/sites_proibidos"" >> /etc/squid3/squid.conf
 echo "http_access deny sites_proibidos" >> /etc/squid3/squid.conf
 
-cache_mgr efelipecarlos@outlook.com
+echo "cache_mgr efelipecarlos@outlook.com" >> /etc/squid3/squid.conf
 
 ############################
 #Regras de acesso em portas#
 ############################
 
 #Portas seguras
-acl SSL_ports port 443
+echo "acl SSL_ports port 443" >> /etc/squid3/squid.conf
 
 #HTTP
 echo "acl Safe_ports port 80" >> /etc/squid3/squid.conf 

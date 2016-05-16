@@ -10,6 +10,9 @@ if [ "$way" != "/usr/sbin/squid3" ];then
 
 	apt-get install squid3
 	apt-get install apache2-utils
+	apt-get install build-essential 
+	groupadd squid
+	useradd -g squid -s /dev/null squid 
 
 else
 	echo "Installed"

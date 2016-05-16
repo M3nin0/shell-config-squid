@@ -135,7 +135,7 @@ echo "######################################"
 echo "#Compartilhando internet             #"
 echo "######################################"
 
-modprobe iptables_nat
+modprobe iptables_nat 2>/dev/null
 echo 1 > /proc/sys/net/ipv4/ip_forward
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #ETH0 Representa a interface conectada a internet
 iptables -A INPUT -p tcp --syn -s 192.168.0.0/255.255.255.0 -j ACCEPT
@@ -182,6 +182,14 @@ echo "iptables -A INPUT -p tcp --syn -j DROP" >> /etc/init.d/firewall.sh
 #Bloqueio de portas UDP de 0 - 65535
 iptables -A INPUT -p udp --dport 0:65535 -j DROP
 echo "iptables -A INPUT -p udp --dport 0:65535 -j DROP" >> /etc/init.d/firewall.sh
+
+#######################################
+#Fazendo proxy transparente com squid #
+#######################################
+
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3128 
+echo "iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3128 " >> /etc/init.d/firewall.sh
+
 
 ##########################
 #Compartilhando internet #

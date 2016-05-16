@@ -5,9 +5,9 @@ Este script foi feito para facilitar a instalação e configuração de um squid
 
 Para realizar os bloqueios siga as seguintes pastas:
 
-/etc/squid3/palavrasproibidas -> It makes the contents of blocking words
+/etc/squid3/palavrasproibidas -> Faz o bloqueio por palavras
 
-/etc/squid3/listabloqueada -> Block URL Sites
+/etc/squid3/listabloqueada -> Bloqueio os sites por endereço.
 
 
 Este script foi feito para suprir a necessidade de meu cenario, verifique antes de utilizar

@@ -55,8 +55,8 @@ echo "access_log /var/log/squid3/acces.log squid" >> /etc/squid3/squid.conf
 ###########################
 #Bloqueio de sites por URL#
 ###########################
-
-echo "acl sites_proibidos url_regex -i "etc/squid3/regras/sites_proibidos"" >> /etc/squid3/squid.conf
+touch etc/squid3/sites_proibidos
+echo "acl sites_proibidos url_regex -i "etc/squid3/sites_proibidos"" >> /etc/squid3/squid.conf
 echo "http_access deny sites_proibidos" >> /etc/squid3/squid.conf
 
 echo "cache_mgr efelipecarlos@outlook.com" >> /etc/squid3/squid.conf

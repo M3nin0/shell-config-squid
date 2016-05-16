@@ -86,6 +86,8 @@ echo "acl Safe_ports port 488" >> /etc/squid3/squid.conf
 echo "acl Safe_ports port 591" >> /etc/squid3/squid.conf
 #SSH
 echo "acl Safe_ports port 22" >> /etc/squid3/squid.conf
+#Squid
+echo "acl Safe_ports port 3128" >> /etc/squid3/squid.conf
 #Portas Altas
 echo "acl Safe_ports port 1025-65535" >> /etc/squid3/squid.conf
 

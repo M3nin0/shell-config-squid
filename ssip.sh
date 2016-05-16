@@ -1,7 +1,8 @@
 #!/bin/bash
 
-install_squid(){
 
+install_squid(){
+	
 echo "Check Squid3 Install"
 way=$(which squid3)
 
@@ -15,80 +16,99 @@ else
 fi
 
 clear
-echo "What do you want to do?"
-echo "1 - Install/Config SQUID + Sarg"
-echo "2 - Configure Firewall"
+echo "O que você quer fazer?"
+echo "1 - Install/Config SQUID"
+echo "2 - Install/Config Sarg"
+echo "3 - Compartilhar internet - NAT"
+echo "4 - Configure Firewall"
 read menu
 
-case $menu in 
+case $menu in
 
 1)
-echo "Make Copies for your security"
-mv /etc/squid3/squid.conf /etc/squid3/squid.old
-echo "acl manager proto cache_object" >> /etc/squid3/squid.conf
-echo "acl localhost src 127.0.0.1/32" >> /etc/squid3/squid.conf
-echo "acl redelocal src 192.168.0.0/24" >> /etc/squid3/squid.conf
-echo "acl SSL_ports port 443" >> /etc/squid3/squid.conf
-echo "acl Safe_ports port 80	 # http" >> /etc/squid3/squid.conf
-echo "acl Safe_ports port 81	 # http" >> /etc/squid3/squid.conf
-echo "acl Safe_ports port 88   # http" >> /etc/squid3/squid.conf
-echo "acl Safe_ports port 21	 # ftp" >> /etc/squid3/squid.conf
-echo "acl Safe_ports port 443	 # https" >> /etc/squid3/squid.conf
-echo "acl Safe_ports port 70	 # gopher" >> /etc/squid3/squid.conf
-echo "acl Safe_ports port 210	 # wais" >> /etc/squid3/squid.conf
-echo "acl Safe_ports port 1025-65535	# High_Ports" >> /etc/squid3/squid.conf
+
+echo "Squid Config"
+
+#Porta padrão
+echo "http_port 3128" >> /etc/squid3/squid.conf
+
+#Nome do Servidor#
+echo "visible_hostname SquidTest" >> /etc/squid3/squid.conf
+
+#######
+#Cache#
+#######
+
+echo "cache_dir ufs /var/spool/squid3 3000 16 256" >> /etc/squid3/squid.conf
+
+###############
+#Log de acesso#
+###############
+
+echo "access_log /var/log/squid3/acces.log squid" >> /etc/squid3/squid.conf
+
+###########################
+#Bloqueio de sites por URL#
+###########################
+
+echo "acl sites_proibidos url_regex -i "etc/squid3/regras/sites_proibidos"" >> /etc/squid3/squid.conf
+echo "http_access deny sites_proibidos" >> /etc/squid3/squid.conf
+
+cache_mgr efelipecarlos@outlook.com
+
+############################
+#Regras de acesso em portas#
+############################
+
+#Portas seguras
+acl SSL_ports port 443
+
+#HTTP
+echo "acl Safe_ports port 80" >> /etc/squid3/squid.conf 
+#HTTP
+echo "acl Safe_ports port 82" >> /etc/squid3/squid.conf
+#FTP
+echo "acl Safe_ports port 21" >> /etc/squid3/squid.conf
+#HTTPS
+echo  "acl Safe_ports port 443" >> /etc/squid3/squid.conf
+#GOPHER
+echo "acl Safe_ports port 70" >> /etc/squid3/squid.conf
+#HTTP-MGMT
+echo "acl Safe_ports port 280" >> /etc/squid3/squid.conf
+#GSS-HTTP
+echo "acl Safe_ports port 488" >> /etc/squid3/squid.conf
+#FILEMAKER
+echo "acl Safe_ports port 591" >> /etc/squid3/squid.conf
+#SSH
+echo "acl Safe_ports port 22" >> /etc/squid3/squid.conf
+#Portas Altas
+echo "acl Safe_ports port 1025-65535" >> /etc/squid3/squid.conf
 
 echo "acl CONNECT method CONNECT" >> /etc/squid3/squid.conf
+
+############################
+#Redes com conexão ao Squid#
+############################
+
+echo "acl manger proto cache_object" >> /etc/squid3/squid.conf
+echo "acl localhost src 127.0.0.1/32" >> /etc/squid3/squid.conf
+echo "acl redelocal src 192.168.0.0/24" >> /etc/squid3/squid.conf
+
+###########
+#Bloqueios#
+###########
+
 echo "http_access allow localhost" >> /etc/squid3/squid.conf
 echo "http_access allow redelocal" >> /etc/squid3/squid.conf
 echo "http_access deny !Safe_ports" >> /etc/squid3/squid.conf
 echo "http_access deny CONNECT !SSL_ports" >> /etc/squid3/squid.conf
-echo "http_access allow localhost" >> /etc/squid3/squid.conf
-echo "http_access allow redelocal" >> /etc/squid3/squid.conf
-echo "http_port 3128" >> /etc/squid3/squid.conf
+echo "http_access deny all" >> /etc/squid3/squid.conf
 
-#Nome do Servidor#
-echo "visible_hostname Squid_Server" >> /etc/squid3/squid.conf
+;;
 
-# Erros em Pt-BR
-echo "error_directory /usr/share/squid3/errors/pt-br" >> /etc/squid3/squid.conf
+2)
 
-
-echo "cache_mgr efelipecarlos@outlook.com" >> /etc/squid3/squid.conf
-
-# Logs de acesso
-
-echo "access_log /var/log/squid3/access.log squid" >> /etc/squid3/squid.conf
-
-### Sites Proibidos ####
-touch /etc/squid3/sites_proibidos
-echo "acl sites_proibidos url_regex -i "etc/squid3/regras/sites_proibidos"" >> /etc/squid3/squid.conf
-echo "http_access deny sites_proibidos" >> /etc/squid3/squid.conf 
-
-#Acesso a sites sem nenhuma regra
-
-echo "http_access allow all !sites_proibidos" >> /etc/squid3/squid.conf  
-
-### Configuracoes de cache e memória ####
-echo "cache_dir AUFS /var/spool/squid3 3000 64 256" >> /etc/squid3/squid.conf 
-
-echo "cache_mem 256 MB" >> /etc/squid3/squid.conf
-echo "cache_swap_low 90" >> /etc/squid3/squid.conf
-echo "cache_swap_high 95" >> /etc/squid3/squid.conf
-echo "memory_pools on" >> /etc/squid3/squid.conf
-echo "memory_pools_limit 64 MB" >> /etc/squid3/squid.conf
-echo "maximum_object_size_in_memory 64 KB" >> /etc/squid3/squid.conf
-echo "maximum_object_size 600 MB" >> /etc/squid3/squid.conf
-echo "minimum_object_size 2 KB" >> /etc/squid3/squid.conf
-
-######################################
-#Compartilhando internet             #
-######################################
-
-modprobe iptables_nat
-echo 1 > /proc/sys/net/ipv4/ip_forward
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #ETH0 Representa a interface conectada a internet
-iptables -A INPUT -p tcp --syn -s 192.168.0.0/255.255.255.0 -j ACCEPT
+echo "Config Sarg"
 
 #Iniciando instalação/configuração do Sarg
 apt-get install apache2 
@@ -103,8 +123,23 @@ cp sarg.conf sarg.conf.backup
 echo "access_log /var/log/squid3/access.log" >> sarg.conf
 echo "output_dir /var/www/html/" >> sarg.conf
 ;;
-2)
-echo "Config Firewall"
+
+3)
+
+echo "######################################" 
+echo "#Compartilhando internet             #"
+echo "######################################"
+
+modprobe iptables_nat
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE #ETH0 Representa a interface conectada a internet
+iptables -A INPUT -p tcp --syn -s 192.168.0.0/255.255.255.0 -j ACCEPT
+
+;;
+
+4)
+
+echo "Firewall Config"
 
 #Gerando arquivo de inicialização
 touch /etc/init.d/firewall.sh
@@ -143,13 +178,6 @@ echo "iptables -A INPUT -p tcp --syn -j DROP" >> /etc/init.d/firewall.sh
 iptables -A INPUT -p udp --dport 0:65535 -j DROP
 echo "iptables -A INPUT -p udp --dport 0:65535 -j DROP" >> /etc/init.d/firewall.sh
 
-#######################################
-#Fazendo proxy transparente com squid #
-#######################################
-
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3128 
-echo "iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3128 " >> /etc/init.d/firewall.sh
-
 ##########################
 #Compartilhando internet #
 ##########################
@@ -158,13 +186,12 @@ echo "modprobe iptables_nat" >> /etc/init.d/firewall.sh
 echo "echo 1 > /proc/sys/net/ipv4/ip_forward" >> /etc/init.d/firewall.sh
 echo "iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE" >> /etc/init.d/firewall.sh
 echo "iptables -A INPUT -p tcp --syn -s 192.168.0.0/255.255.255.0 -j ACCEPT" >> /etc/init.d/firewall.sh
-
 ;;
+
 *)
-echo "Invalid!!!"
+echo "Invalido!!!"
 exit
 esac
-
 }
 
 ROT=$(id -u)

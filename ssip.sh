@@ -4,9 +4,9 @@
 install_squid(){
 	
 echo "Check Squid3 Install"
-way=$(which squid3)
+PATH=$(which squid3)
 
-if [ "$way" != "/usr/sbin/squid3" ];then
+if [ "$PATH" != "/usr/sbin/squid3" ];then
 
 	apt-get install squid3
 	apt-get install apache2-utils
@@ -59,7 +59,7 @@ touch etc/squid3/sites_proibidos
 echo "acl sites_proibidos url_regex -i "etc/squid3/sites_proibidos"" >> /etc/squid3/squid.conf
 echo "http_access deny sites_proibidos" >> /etc/squid3/squid.conf
 
-echo "cache_mgr efelipecarlos@outlook.com" >> /etc/squid3/squid.conf
+echo "cache_mgr localdomain@localdomain.com" >> /etc/squid3/squid.conf
 
 ############################
 #Regras de acesso em portas#
